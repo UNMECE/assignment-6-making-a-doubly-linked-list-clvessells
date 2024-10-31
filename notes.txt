@@ -1,3 +1,76 @@
+while(current != NULL && current->coord_id != coord_id_to_delete){
+		
+		current = current->next;
+
+		if(current == NULL){
+			
+			cout << "Coordinate with number " << coord_id_to_delete << " was not found.\n" << endl;
+			return 0;
+		}
+
+		if(current == list_head){
+			
+			list_head = current->next;
+			
+		}
+		
+		if(current->previous != NULL){
+			
+			current->next->previous = current->previous;
+			
+		}
+		
+		if(current->next != NULL){
+			
+			current->next->previous = current->previous;
+			
+		}
+	}	
+	
+	
+	 
+	cout << "\nCoordinate Number " << coord_id_to_delete << " has been deleted.\n" << endl;
+		
+	cout << "New list of coordinates: " << endl;
+	
+	while(current != NULL){
+		
+		cout << "Coordinate Number " << current->coord_id + 1 << ":\n X: " << current->x << " Y: " << current->y << endl;
+        current = current->previous;
+		
+	}
+	
+	cout << "\n" << endl;
+	
+***************************************************************************
+// closest_to: find the coordinate that is closest to the given x, y and output the distance between the 2
+void closest_to(Coordinate *list_head, int x, int y){
+	
+	Coordinate *current = list_head;
+	
+	int closest = sqrt((current->x - x)^2 + (current->y - y)^2);
+	int distance_2 = 0;
+	
+	while(current != NULL){
+		 
+		distance_2 = sqrt((current->next->x)^2 + (current->next->y - y)^2);
+		
+		if(closest < distance_2){
+			
+			closest = closest;
+			current = current->next;
+			
+		}else{
+			
+			closest = distance_2;
+			current = current->next;
+		}
+		
+	}
+	
+	cout << "The distance to the closest point to entered point (" << x << "," << y << ") is " << closest << ".\n" << endl;
+}	
+***********************************************************************************************************
 /* Assignment-6-making-a-doubly-linked-list-clvessells */
 
 
@@ -44,10 +117,8 @@ int main(int argc, char *argv[]){
 		return 0;
 	}
 	
-	
 	// Declare struct and fill it with random ints.
 	Coordinate *coordinates = new Coordinate[number_of_pairs];
-	
 	for(int i = 0; i < number_of_pairs; i++){
 		
 		coordinates[i].x = random_number_generator();
@@ -67,15 +138,16 @@ int main(int argc, char *argv[]){
 			coordinates[i].next = NULL; // Last element's `next` will remain NULL initially
 	}
 		
-	cout << "You have successfully filled " << number_of_pairs << " (X,Y) coordinates.\n" << endl;
 	
+	
+	cout << "You have successfully filled " << number_of_pairs << " (X,Y) coordinates.\n" << endl;
 	
 	// Set up head and tail pointers.
 	Coordinate *list_head = &coordinates[0];
 	Coordinate *list_tail = &coordinates[number_of_pairs - 1];
 	
 	
-	//Test Prints and Calls
+	//Test Prints
 	cout << "Your first random number is " << random_number_generator() << ".\n" << endl;
 	cout << "Your second random number is " << random_number_generator() <<".\n" << endl;
 	
@@ -89,9 +161,6 @@ int main(int argc, char *argv[]){
 	list_length(list_head);
 	closest_to(list_head, 0, 0);
 	farthest_from(list_head, 0, 0);	
-	delete_coordinate(list_head, 4);
-	list_length(list_head);
-	
 	
 	return 0;
 }
@@ -119,14 +188,12 @@ void add_coordinate(Coordinate *&list_tail, int x, int y){
 	cout << "You now have " << new_coordinate->coord_id + 1 << " (X,Y) pairs.\n" << endl;
 }
 
-
 // forward_display: displays all coordinates from beginning to end
 void forward_display(Coordinate *list_head){
 	
 	cout << "\nDisplaying coordinates on list from head to tail:" << endl;
 	
 	Coordinate *current = list_head;
-	
     while (current != NULL) {
         cout << "Coordinate Number " << current->coord_id + 1 << ":\n X: " << current->x << " Y: " << current->y << endl;
         current = current->next;
@@ -135,43 +202,29 @@ void forward_display(Coordinate *list_head){
     cout << "\n" << endl;
 }
 
-
 // backwards_display: displays all coordinates from end to beginning
 void backward_display(Coordinate *list_tail){
 	
 	cout << "Displaying coordinates on the list from tail to head:" << endl;
 	
 	Coordinate *current = list_tail;
-	
     while (current != NULL) {
-		
         cout << "Coordinate Number " << current->coord_id + 1 << ":\n X: " << current->x << " Y: " << current->y << endl;
         current = current->previous;
     }
 	cout << "\n" << endl;
 }
 
-// THIS IS THE FUNCTION I CAN NOT GET WORKING!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 // delete_coordinate: removes a coordinate from the linked list (free memory!)
 void delete_coordinate(Coordinate *list_head, int coord_id_to_delete){
 	
 	Coordinate *current = list_head;
-	
 	// Traverse the list to find the node to delete
     while (current != NULL && current->coord_id != coord_id_to_delete) {
-        
-		current = current->next;
-		
-		if(current->coord_id == coord_id_to_delete){
-			
-			current->next->previous = current->previous;
-			current->previous->next = current->next;
-			
-		}
-		
+        current = current->next;
     }
+
 	
-	cout << "You have deleted coordinate number " << coord_id_to_delete << ".\n"<< endl; 
 }
 
 
@@ -197,31 +250,24 @@ int list_length(Coordinate *list_head){
 void closest_to(Coordinate *list_head, int x, int y){
 	
 	Coordinate *current = list_head;
-    double closest_distance = sqrt(pow(current->x - x, 2) + pow(current->y - y, 2));
+    double closest_distance = std::sqrt(std::pow(current->x - x, 2) + std::pow(current->y - y, 2));
     Coordinate *closest_coordinate = NULL;
 
     while (current != NULL) {
-		
-        double distance = sqrt(pow(current->x - x, 2) + pow(current->y - y, 2));
-        
-	   
-	   if (distance < closest_distance) {
+        double distance = std::sqrt(std::pow(current->x - x, 2) + std::pow(current->y - y, 2));
+        if (distance < closest_distance) {
             closest_distance = distance;
             closest_coordinate = current;
         }
-		
         current = current->next;
     }
 
     if (closest_coordinate != NULL) {
-        
-		cout << "Closest Coordinate Number to (" << x << "," << y << ") is: " 
-			 << closest_coordinate->coord_id + 1
+        cout << "Closest Coordinate Number to (" << x << "," << y << ") is: " 
+			 << closest_coordinate->coord_id 
              << " \nX: " << closest_coordinate->x << " Y: " << closest_coordinate->y 
              << " \nWith a distance of " << closest_distance << ".\n" << endl;
-			 
     } else {
-		
         cout << "No coordinates found." << endl;
     }
 }
@@ -231,33 +277,24 @@ void closest_to(Coordinate *list_head, int x, int y){
 void farthest_from(Coordinate *list_head, int x, int y){
 	
 	Coordinate *current = list_head;
-	
-    double farthest_distance = sqrt(pow(current->x - x, 2) + pow(current->y - y, 2));
-	
+    double farthest_distance = std::sqrt(std::pow(current->x - x, 2) + std::pow(current->y - y, 2));
     Coordinate *farthest_coordinate = NULL;
 
     while (current != NULL) {
-		
-        double distance = sqrt(pow(current->x - x, 2) + pow(current->y - y, 2));
-        
-		if (distance > farthest_distance) {
-			
+        double distance = std::sqrt(std::pow(current->x - x, 2) + std::pow(current->y - y, 2));
+        if (distance > farthest_distance) {
             farthest_distance = distance;
             farthest_coordinate = current;
         }
-		
         current = current->next;
     }
 
     if (farthest_coordinate != NULL) {
-		
         cout << "Farthest Coordinate Number from (" << x << "," << y << ") is: " 
-			 << farthest_coordinate->coord_id + 1
+			 << farthest_coordinate->coord_id 
              << " \nX: " << farthest_coordinate->x << " Y: " << farthest_coordinate->y 
              << " \nWith a distance of " << farthest_distance << ".\n" << endl;
-			 
     } else {
-		
         cout << "No coordinates found." << endl;
     }
 }
@@ -274,4 +311,4 @@ int random_number_generator(){
 	
 	return random;
 	
-}
+}	
